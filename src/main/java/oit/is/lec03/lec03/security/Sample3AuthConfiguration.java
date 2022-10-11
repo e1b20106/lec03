@@ -27,24 +27,19 @@ public class Sample3AuthConfiguration {
     // UserBuilder usersにユーザ名，パスワード，ロールを指定してbuildする
     // このときパスワードはBCryptでハッシュ化されている．
     // ハッシュ化されたパスワードを得るには，この授業のbashターミナルで下記のように末尾にユーザ名とパスワードを指定すると良い(要VPN)
-    // $ sshrun htpasswd -nbBC 10 user1 p@ss
+    // $ sshrun htpasswd -nbBC 10 user1 p@ss admin hogehoge
     UserDetails user1 = users
         .username("user1")
         .password("$2y$10$ngxCDmuVK1TaGchiYQfJ1OAKkd64IH6skGsNw1sLabrTICOHPxC0e")
         .roles("USER")
         .build();
-    UserDetails user2 = users
-        .username("user2")
-        .password("$2y$10$ngxCDmuVK1TaGchiYQfJ1OAKkd64IH6skGsNw1sLabrTICOHPxC0e")
-        .roles("USER")
-        .build();
     UserDetails admin = users
         .username("admin")
-        .password("$2y$10$ngxCDmuVK1TaGchiYQfJ1OAKkd64IH6skGsNw1sLabrTICOHPxC0e")
+        .password("$2y$10$4yeIaGGjaIwOTFDlDzpIvuSvSvRyzA15Ggyq6lWFOQY2G.CZh66A.")
         .roles("ADMIN")
         .build();
     // 生成したユーザをImMemoryUserDetailsManagerに渡す（いくつでも良い）
-    return new InMemoryUserDetailsManager(user1, user2, admin);
+    return new InMemoryUserDetailsManager(user1, admin);
   }
 
   /**
@@ -63,7 +58,7 @@ public class Sample3AuthConfiguration {
     // mvcMatchers().authenticated()がmvcMatchersに指定されたアクセス先に認証処理が必要であることを示す
     // authenticated()の代わりにpermitAll()と書くと認証不要となる
     http.authorizeHttpRequests()
-        .mvcMatchers("/sample3/**").authenticated();
+        .mvcMatchers("/").authenticated();
 
     http.logout().logoutSuccessUrl("/"); // ログアウト時は "http://localhost:8000/" に戻る
     return http.build();
